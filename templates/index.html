@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Template Manager</h1>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="general">General</button>
+            <button class="tab-button" data-tab="gvc">GVC</button>
+            <button class="tab-button" data-tab="internal">Internal</button>
+            <button class="tab-button" data-tab="specialist">Specialist</button>
+        </div>
+
+        <div class="tab-content active" id="general">
+            <div class="template-list">
+                <button class="template-button" data-template="FMR">FMR</button>
+                <button class="template-button" data-template="Incrup">Incrup</button>
+                <button class="template-button" data-template="NAG2 responsive">NAG2 responsive</button>
+                <button class="template-button" data-template="NAG2 unresponsive">NAG2 unresponsive</button>
+                <button class="template-button" data-template="FOLLOW UP">FOLLOW UP</button>
+                <button class="template-button" data-template="FOLLOW UP FANCY">FOLLOW UP FANCY</button>
+                <button class="template-button" data-template="WORKING ON IT">WORKING ON IT</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="gvc">
+            <div class="template-list">
+                <button class="template-button" data-template="ACCEPTED INCRUP">ACCEPTED INCRUP</button>
+                <button class="template-button" data-template="COMPLETED INCRUP">COMPLETED INCRUP</button>
+                <button class="template-button" data-template="OFFER INCRUP AGENT1">OFFER INCRUP AGENT1</button>
+                <button class="template-button" data-template="OFFER INCRUP AGENT2">OFFER INCRUP AGENT2</button>
+                <button class="template-button" data-template="OFFER INCRUP CUSTOMER">OFFER INCRUP CUSTOMER</button>
+                <button class="template-button" data-template="ACCEPTED INTERNAL">ACCEPTED INTERNAL</button>
+                <button class="template-button" data-template="COMPLETED INTERNAL">COMPLETED INTERNAL</button>
+                <button class="template-button" data-template="OFFERED INTERNAL">OFFERED INTERNAL</button>
+                <button class="template-button" data-template="NOT SHOWING UP">NOT SHOWING UP</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="internal">
+            <div class="template-list">
+                <button class="template-button" data-template="FMR">FMR</button>
+                <button class="template-button" data-template="UPDATE">UPDATE</button>
+                <button class="template-button" data-template="CLOSING NOTE">CLOSING NOTE</button>
+                <button class="template-button" data-template="CLOSING NOTE2">CLOSING NOTE2</button>
+                <button class="template-button" data-template="HANDOFF">HANDOFF</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="specialist">
+            <div class="template-list">
+                <button class="template-button" data-template="HARDCONSULT">HARDCONSULT</button>
+                <button class="template-button" data-template="SME TEMPLATE">SME TEMPLATE</button>
+            </div>
+        </div>
+
+        <div class="template-editor">
+            <h2>Template Editor</h2>
+            <textarea id="template-content" rows="10" cols="50"></textarea>
+            <div class="editor-buttons">
+                <button id="save-template">Save Template</button>
+                <button id="copy-template">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 
