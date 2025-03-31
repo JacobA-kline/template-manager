@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import json
 import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 app.secret_key = os.urandom(24)
 
 # Load templates from JSON file
@@ -52,4 +54,4 @@ def save_template():
     return jsonify({'error': 'Invalid data'}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True, host='0.0.0.0', port=8090) 

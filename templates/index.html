@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Template Manager</h1>
         
+        <div class="agent-info">
+            <div class="input-group">
+                <input type="text" id="agent-name" placeholder="Enter Your Name" class="agent-input">
+                <input type="date" id="gvc-date" class="date-input" style="display: none;">
+            </div>
+        </div>
+
         <div class="tabs">
             <button class="tab-button active" data-tab="general">General</button>
             <button class="tab-button" data-tab="gvc">GVC</button>
@@ -20,9 +28,9 @@
         <div class="tab-content active" id="general">
             <div class="template-list">
                 <button class="template-button" data-template="FMR">FMR</button>
-                <button class="template-button" data-template="Incrup">Incrup</button>
-                <button class="template-button" data-template="NAG2 responsive">NAG2 responsive</button>
-                <button class="template-button" data-template="NAG2 unresponsive">NAG2 unresponsive</button>
+                <button class="template-button" data-template="INCRUP">INCRUP</button>
+                <button class="template-button" data-template="NAG2 RESPONSIVE">NAG2 RESPONSIVE</button>
+                <button class="template-button" data-template="NAG2 UNRESPONSIVE">NAG2 UNRESPONSIVE</button>
                 <button class="template-button" data-template="FOLLOW UP">FOLLOW UP</button>
                 <button class="template-button" data-template="FOLLOW UP FANCY">FOLLOW UP FANCY</button>
                 <button class="template-button" data-template="WORKING ON IT">WORKING ON IT</button>
@@ -62,6 +70,11 @@
 
         <div class="template-editor">
             <h2>Template Editor</h2>
+            <div class="template-tools">
+                <button id="add-date" class="tool-button">Add Date</button>
+                <button id="add-time" class="tool-button">Add Time</button>
+                <button id="add-datetime" class="tool-button">Add Date & Time</button>
+            </div>
             <textarea id="template-content" rows="10" cols="50"></textarea>
             <div class="editor-buttons">
                 <button id="save-template">Save Template</button>

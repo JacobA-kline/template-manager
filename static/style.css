@@ -46,6 +46,64 @@ h1::after {
     border-radius: 2px;
 }
 
+.agent-info {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 15px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.agent-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-transform: capitalize;
+}
+
+.date-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    background: white;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
 .tabs {
     display: flex;
     gap: 1rem;
@@ -150,6 +208,33 @@ h1::after {
     letter-spacing: 1.5px;
 }
 
+.template-tools {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tool-button {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 12px;
+    background: #edf2f7;
+    color: #2d3748;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.tool-button:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
 #template-content {
     width: 100%;
     padding: 1.5rem;
@@ -163,6 +248,7 @@ h1::after {
     transition: all 0.3s ease;
     background: #f8fafc;
     letter-spacing: 0.5px;
+    text-transform: none;
 }
 
 #template-content:focus {
