@@ -56,10 +56,9 @@ h1::after {
 
 .input-group {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .agent-input {
@@ -102,6 +101,36 @@ h1::after {
 .date-input::-webkit-calendar-picker-indicator {
     cursor: pointer;
     padding: 0.5rem;
+}
+
+.timezone-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-transform: capitalize;
+    background: white;
+    cursor: pointer;
+    margin-left: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.timezone-select:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
 .tabs {

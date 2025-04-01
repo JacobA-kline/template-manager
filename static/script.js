@@ -3,11 +3,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     const gvcDateInput = document.getElementById('gvc-date');
+    const templateContent = document.getElementById('template-content');
     let currentCategory = 'general';
+    const timezoneSelect = document.getElementById('timezone-select');
+    let currentTimezone = 'UTC+2'; // Default timezone
 
     // Set default date for GVC date input
     const today = new Date().toISOString().split('T')[0];
     gvcDateInput.value = today;
+
+    // Store timezone in localStorage
+    timezoneSelect.value = localStorage.getItem('timezone') || 'UTC+2';
+    currentTimezone = timezoneSelect.value;
+
+    timezoneSelect.addEventListener('change', function() {
+        currentTimezone = this.value;
+        localStorage.setItem('timezone', currentTimezone);
+        updateSignature();
+    });
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -28,12 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Show/hide GVC date input
             gvcDateInput.style.display = tab === 'gvc' ? 'block' : 'none';
+
+            // Clear template editor when switching tabs
+            templateContent.value = '';
         });
     });
 
     // Template button functionality
     const templateButtons = document.querySelectorAll('.template-button');
-    const templateContent = document.getElementById('template-content');
     const saveButton = document.getElementById('save-template');
     const copyButton = document.getElementById('copy-template');
     const agentNameInput = document.getElementById('agent-name');
@@ -118,7 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Template not found');
                     return;
                 }
-                templateContent.value = data;
+                // Replace NAME with the user's name if it exists
+                const agentName = agentNameInput.value.trim();
+                if (agentName) {
+                    templateContent.value = data.replace(/NAME/g, agentName);
+                } else {
+                    templateContent.value = data;
+                }
                 // Add signature after template is loaded
                 setTimeout(addSignature, 100);
             } catch (error) {
@@ -165,12 +186,41 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Template copied to clipboard!');
     });
 
-    // Update signature when agent name changes
+    // Update signature and replace NAME when agent name changes
     agentNameInput.addEventListener('change', () => {
         if (templateContent.value) {
+            const agentName = agentNameInput.value.trim();
+            if (agentName) {
+                // Replace all instances of NAME with the new name
+                templateContent.value = templateContent.value.replace(/NAME/g, agentName);
+            }
             // Remove existing signature if present
             templateContent.value = templateContent.value.replace(/\n\nBest regards,\n.*$/, '');
             addSignature();
         }
     });
+
+    // Function to update signature with current name and timezone
+    function updateSignature() {
+        if (templateContent.value) {
+            const agentName = agentNameInput.value.trim();
+            const timezoneText = timezoneSelect.options[timezoneSelect.selectedIndex].text;
+            const timezoneValue = timezoneSelect.value;
+            
+            // Extract just the city name from the timezone text (e.g., "UTC-3 (Buenos Aires)" -> "Buenos Aires")
+            const cityName = timezoneText.match(/\((.*?)\)/)[1];
+            
+            // Replace the timezone part in the existing signature
+            templateContent.value = templateContent.value.replace(
+                /Working Hours: Sun-Thu 10:00 - 17:00.*$/,
+                `Working Hours: Sun-Thu 10:00 - 17:00 ${cityName} (${timezoneValue})`
+            );
+        }
+    }
+
+    // Update signature when agent name changes
+    agentNameInput.addEventListener('change', updateSignature);
+
+    // Update signature when timezone changes
+    timezoneSelect.addEventListener('change', updateSignature);
 }); 
