@@ -52,9 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveButton = document.getElementById('save-template');
     const copyButton = document.getElementById('copy-template');
     const agentNameInput = document.getElementById('agent-name');
-    const addDateBtn = document.getElementById('add-date');
-    const addTimeBtn = document.getElementById('add-time');
-    const addDateTimeBtn = document.getElementById('add-datetime');
 
     // Store agent name in localStorage
     agentNameInput.value = localStorage.getItem('agentName') || '';
@@ -72,57 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('agentName', this.value);
     });
 
-    // Format date and time functions
-    function formatDate() {
-        const date = new Date();
-        return date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
-
-    function formatTime() {
-        const date = new Date();
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        });
-    }
-
-    // Add date/time to cursor position
-    function insertAtCursor(text) {
-        const cursorPos = templateContent.selectionStart;
-        const textBefore = templateContent.value.substring(0, cursorPos);
-        const textAfter = templateContent.value.substring(cursorPos);
-        templateContent.value = textBefore + text + textAfter;
-    }
-
-    // Add signature to template
-    function addSignature() {
-        const agentName = agentNameInput.value.trim();
-        if (!agentName) return;
-
-        if (!templateContent.value.includes('Best regards,')) {
-            templateContent.value += '\n\nBest regards,\n' + agentName;
-        }
-    }
-
-    // Button event listeners
-    addDateBtn.addEventListener('click', () => {
-        insertAtCursor(formatDate());
-    });
-
-    addTimeBtn.addEventListener('click', () => {
-        insertAtCursor(formatTime());
-    });
-
-    addDateTimeBtn.addEventListener('click', () => {
-        insertAtCursor(formatDate() + ' at ' + formatTime());
-    });
-
+    // Template button functionality
     templateButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const templateName = button.getAttribute('data-template');
@@ -133,18 +80,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Template not found');
                     return;
                 }
-                // Replace NAME with the user's name if it exists
+                // Replace [Your Name] with the user's name if it exists
                 const agentName = agentNameInput.value.trim();
                 if (agentName) {
-                    templateContent.value = data.replace(/NAME/g, agentName);
+                    templateContent.value = data.replace(/\[Your Name\]/g, agentName);
                 } else {
                     templateContent.value = data;
                 }
-                // Add signature after template is loaded
-                setTimeout(addSignature, 100);
             } catch (error) {
                 console.error('Error loading template:', error);
-                alert('Error loading template');
+                // Only show error alert if the template content is empty
+                if (!templateContent.value) {
+                    alert('Error loading template');
+                }
             }
         });
     });
@@ -180,23 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Copy to clipboard functionality
-    copyButton.addEventListener('click', () => {
-        templateContent.select();
-        document.execCommand('copy');
-        alert('Template copied to clipboard!');
-    });
-
-    // Update signature and replace NAME when agent name changes
-    agentNameInput.addEventListener('change', () => {
-        if (templateContent.value) {
-            const agentName = agentNameInput.value.trim();
-            if (agentName) {
-                // Replace all instances of NAME with the new name
-                templateContent.value = templateContent.value.replace(/NAME/g, agentName);
-            }
-            // Remove existing signature if present
-            templateContent.value = templateContent.value.replace(/\n\nBest regards,\n.*$/, '');
-            addSignature();
+    copyButton.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(templateContent.value);
+            alert('Template copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy template');
         }
     });
 
@@ -213,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Replace the timezone part in the existing signature
             templateContent.value = templateContent.value.replace(
                 /Working Hours: Sun-Thu 10:00 - 17:00.*$/,
-                `Working Hours: Sun-Thu 10:00 - 17:00 ${cityName} (${timezoneValue})`
+                `Working Hours: Sun-Thu 10:00 - 17:00 ${cityName} Timezone (${timezoneValue})`
             );
         }
     }
