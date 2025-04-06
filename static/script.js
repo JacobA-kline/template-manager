@@ -64,9 +64,32 @@ document.addEventListener('DOMContentLoaded', function() {
     agentNameInput.addEventListener('input', function() {
         // Remove any existing capitalization
         this.value = this.value.toLowerCase();
+        console.log(this.value);
         // Capitalize first letter of each word
         this.value = capitalizeWords(this.value);
         localStorage.setItem('agentName', this.value);
+        const newAgentName = agentNameInput.value.trim();
+        const oldAgentName = localStorage.getItem('previousAgentName');
+        
+        // Get the current text content from the template content element
+        const templateElement = document.querySelector('#template-content');
+        const currentText = templateElement.value;
+        
+        if (newAgentName) {
+            let updatedText = currentText;
+            // If there was a previous name, replace it with the new name
+            if (oldAgentName) {
+                updatedText = currentText.replace(new RegExp(oldAgentName, 'g'), newAgentName);
+            }
+            // Also check for the default placeholder
+            updatedText = updatedText.replace(/\[Your Name\]/g, newAgentName);
+            templateContent.value = updatedText;
+            
+            // Store the current name as previous for next update
+            localStorage.setItem('previousAgentName', newAgentName);
+        } else {
+            templateContent.value = currentText;
+        }
     });
 
     // Template button functionality
