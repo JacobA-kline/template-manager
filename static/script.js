@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentCategory = 'general';
     const timezoneSelect = document.getElementById('timezone-select');
     let currentTimezone = 'UTC+2'; // Default timezone
+    const startTimeSelect = document.getElementById('start-time');
+    const endTimeSelect = document.getElementById('end-time');
 
     // Set default date for GVC date input
     const today = new Date().toISOString().split('T')[0];
@@ -21,6 +23,19 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('timezone', currentTimezone);
         updateSignature();
     });
+
+        // Update signature when start time changes
+    startTimeSelect.addEventListener('change', function() {
+        console.log('Start time changed to:', this.value); // Debugging line
+        updateSignature();
+    });
+
+    // Update signature when end time changes
+    endTimeSelect.addEventListener('change', function() {
+        console.log('End time changed to:', this.value); // Debugging line
+        updateSignature();
+    });
+
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -62,35 +77,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     agentNameInput.addEventListener('input', function() {
-        // Remove any existing capitalization
         this.value = this.value.toLowerCase();
         console.log(this.value);
-        // Capitalize first letter of each word
         this.value = capitalizeWords(this.value);
         localStorage.setItem('agentName', this.value);
-        const newAgentName = agentNameInput.value.trim();
-        const oldAgentName = localStorage.getItem('previousAgentName');
-        
-        // Get the current text content from the template content element
+    
+        const newAgentName = this.value.trim();
+        const oldAgentName = localStorage.getItem('previousAgentName') || '';
+    
         const templateElement = document.querySelector('#template-content');
-        const currentText = templateElement.value;
-        
+        let currentText = templateElement.value;
+    
         if (newAgentName) {
-            let updatedText = currentText;
-            // If there was a previous name, replace it with the new name
+            // Replace both previous agent name and [Your Name]
             if (oldAgentName) {
-                updatedText = currentText.replace(new RegExp(oldAgentName, 'g'), newAgentName);
+                const escapedOldName = oldAgentName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape RegEx chars
+                const nameRegex = new RegExp(`\\b${escapedOldName}\\b`, 'g');
+                currentText = currentText.replace(nameRegex, newAgentName);
             }
-            // Also check for the default placeholder
-            updatedText = updatedText.replace(/\[Your Name\]/g, newAgentName);
-            templateContent.value = updatedText;
             
-            // Store the current name as previous for next update
+    
+            templateElement.value = currentText;
+    
+            // Save new name as previous
             localStorage.setItem('previousAgentName', newAgentName);
-        } else {
-            templateContent.value = currentText;
+    
+            // Also update signature in case timezone or name changed
+            updateSignature();
         }
     });
+    
 
     // Template button functionality
     templateButtons.forEach(button => {
@@ -110,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     templateContent.value = data;
                 }
+                // Update signature with current working hours and timezone
+                updateSignature();
             } catch (error) {
                 console.error('Error loading template:', error);
                 // Only show error alert if the template content is empty
@@ -164,17 +182,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update signature with current name and timezone
     function updateSignature() {
         if (templateContent.value) {
-            const agentName = agentNameInput.value.trim();
             const timezoneText = timezoneSelect.options[timezoneSelect.selectedIndex].text;
             const timezoneValue = timezoneSelect.value;
+            const startTime = startTimeSelect.value;
+            const endTime = endTimeSelect.value;
             
             // Extract just the city name from the timezone text (e.g., "UTC-3 (Buenos Aires)" -> "Buenos Aires")
             const cityName = timezoneText.match(/\((.*?)\)/)[1];
             
             // Replace the timezone part in the existing signature
             templateContent.value = templateContent.value.replace(
-                /Working Hours: Sun-Thu 10:00 - 17:00.*$/,
-                `Working Hours: Sun-Thu 10:00 - 17:00 ${cityName} Timezone (${timezoneValue})`
+                /Working Hours: Sun-Thu \d{2}:\d{2} - \d{2}:\d{2}.*$/,
+                `Working Hours: Sun-Thu ${startTime} - ${endTime} ${cityName} Timezone (${timezoneValue})`
             );
         }
     }
@@ -184,4 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update signature when timezone changes
     timezoneSelect.addEventListener('change', updateSignature);
+
+    // Update signature when start time changes
+    startTimeSelect.addEventListener('change', updateSignature);
+
+    // Update signature when end time changes
+    endTimeSelect.addEventListener('change', updateSignature);   
 }); 

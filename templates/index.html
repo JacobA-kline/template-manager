@@ -44,6 +44,28 @@
                     <option value="UTC-1">UTC-1 (Azores)</option>
                     <option value="UTC+0">UTC+0 (London)</option>
                 </select>
+                <select id="start-time" class="time-select">
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00" selected>10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="11:30">11:30</option>
+                    <option value="12:00">12:00</option>
+                </select>
+                <select id="end-time" class="time-select">
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                    <option value="17:00" selected>17:00</option>
+                    <option value="17:30">17:30</option>
+                    <option value="18:00">18:00</option>
+                    <option value="18:30">18:30</option>
+                    <option value="19:00">19:00</option>
+                </select>
                 <input type="date" id="gvc-date" class="date-input" style="display: none;">
             </div>
         </div>
@@ -94,7 +116,7 @@
         <div class="tab-content" id="specialist">
             <div class="template-list">
                 <button class="template-button" data-template="HARDCONSULT">HARDCONSULT</button>
-                <button class="template-button" data-template="SME TEMPLATE">SME TEMPLATE</button>
+                <button class="template-button" data-template="VSME TEMPLATE">VSME TEMPLATE</button>
             </div>
         </div>
 
@@ -109,7 +131,11 @@
             </div>
         </div>
     </div>
-
+    <footer>
+        <p>Powered by Jacobs Apps™ © 2025<br>
+        Built with bugs, patched with love.</p>
+    </footer>
+      
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html> 
