@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentTimezone = 'UTC+2'; // Default timezone
     const startTimeSelect = document.getElementById('start-time');
     const endTimeSelect = document.getElementById('end-time');
+    const workingDaysSelect = document.getElementById('working-days');
 
     // Set default date for GVC date input
     const today = new Date().toISOString().split('T')[0];
@@ -18,13 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
     timezoneSelect.value = localStorage.getItem('timezone') || 'UTC+2';
     currentTimezone = timezoneSelect.value;
 
+    // Store working days in localStorage
+    workingDaysSelect.value = localStorage.getItem('workingDays') || 'Sun-Thu';
+
     timezoneSelect.addEventListener('change', function() {
         currentTimezone = this.value;
         localStorage.setItem('timezone', currentTimezone);
         updateSignature();
     });
 
-        // Update signature when start time changes
+    // Update signature when start time changes
     startTimeSelect.addEventListener('change', function() {
         console.log('Start time changed to:', this.value); // Debugging line
         updateSignature();
@@ -36,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSignature();
     });
 
+    // Update signature when working days change
+    workingDaysSelect.addEventListener('change', function() {
+        localStorage.setItem('workingDays', this.value);
+        updateSignature();
+    });
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -186,14 +195,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const timezoneValue = timezoneSelect.value;
             const startTime = startTimeSelect.value;
             const endTime = endTimeSelect.value;
+            const workingDays = workingDaysSelect.value;
             
             // Extract just the city name from the timezone text (e.g., "UTC-3 (Buenos Aires)" -> "Buenos Aires")
             const cityName = timezoneText.match(/\((.*?)\)/)[1];
             
             // Replace the timezone part in the existing signature
             templateContent.value = templateContent.value.replace(
-                /Working Hours: Sun-Thu \d{2}:\d{2} - \d{2}:\d{2}.*$/,
-                `Working Hours: Sun-Thu ${startTime} - ${endTime} ${cityName} Timezone (${timezoneValue})`
+                /Working Hours: .*$/,
+                `Working Hours: ${workingDays} ${startTime} - ${endTime} ${cityName} Timezone (${timezoneValue})`
             );
         }
     }
@@ -208,5 +218,8 @@ document.addEventListener('DOMContentLoaded', function() {
     startTimeSelect.addEventListener('change', updateSignature);
 
     // Update signature when end time changes
-    endTimeSelect.addEventListener('change', updateSignature);   
+    endTimeSelect.addEventListener('change', updateSignature);
+
+    // Update signature when working days change
+    workingDaysSelect.addEventListener('change', updateSignature);
 }); 
