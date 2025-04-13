@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentText = currentText.replace(nameRegex, newAgentName);
             }
             
+            // Also replace [Your Name] placeholder if it exists
+            currentText = currentText.replace(/\[Your Name\]/g, newAgentName);
     
             templateElement.value = currentText;
     
@@ -113,6 +115,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
             // Also update signature in case timezone or name changed
             updateSignature();
+        } else {
+            // If name is empty, restore [Your Name] placeholder
+            if (oldAgentName) {
+                const escapedOldName = oldAgentName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const nameRegex = new RegExp(`\\b${escapedOldName}\\b`, 'g');
+                currentText = currentText.replace(nameRegex, '[Your Name]');
+                templateElement.value = currentText;
+                localStorage.removeItem('previousAgentName');
+            }
         }
     });
     
