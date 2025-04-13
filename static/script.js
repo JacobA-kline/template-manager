@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Template button functionality
     const templateButtons = document.querySelectorAll('.template-button');
-    const saveButton = document.getElementById('save-template');
     const copyButton = document.getElementById('copy-template');
     const agentNameInput = document.getElementById('agent-name');
 
@@ -156,36 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    });
-
-    // Save template functionality
-    saveButton.addEventListener('click', async () => {
-        const templateName = prompt('Enter template name:');
-        if (!templateName) return;
-
-        try {
-            const response = await fetch('/save_template', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    category: currentCategory,
-                    template_name: templateName,
-                    content: templateContent.value
-                })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                alert('Template saved successfully!');
-            } else {
-                alert('Error saving template');
-            }
-        } catch (error) {
-            console.error('Error saving template:', error);
-            alert('Error saving template');
-        }
     });
 
     // Copy to clipboard functionality
