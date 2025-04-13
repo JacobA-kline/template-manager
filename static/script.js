@@ -211,11 +211,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Extract just the city name from the timezone text (e.g., "UTC-3 (Buenos Aires)" -> "Buenos Aires")
             const cityName = timezoneText.match(/\((.*?)\)/)[1];
             
-            // Replace the timezone part in the existing signature
-            templateContent.value = templateContent.value.replace(
-                /Working Hours: .*$/,
-                `Working Hours: ${workingDays} ${startTime} - ${endTime} ${cityName} Timezone (${timezoneValue})`
-            );
+            // Replace the timezone part in the existing signature using multiline flag
+            const lines = templateContent.value.split('\n');
+            const newSignature = `Working Hours: ${workingDays} ${startTime} - ${endTime} ${cityName} Timezone (${timezoneValue})`;
+            
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes('Working Hours:')) {
+                    lines[i] = newSignature;
+                    // If this is a GVC template (has time availability), preserve the following lines
+                    if (lines[i + 1] && lines[i + 1].trim() === '') {
+                        i++; // Skip the next empty line
+                    }
+                }
+            }
+            
+            templateContent.value = lines.join('\n');
         }
     }
 
