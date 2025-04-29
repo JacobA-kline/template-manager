@@ -37,6 +37,17 @@
                     <option value="UTC-9">UTC-9 (Honolulu)</option>
                     <option value="UTC-10">UTC-10 (Pago Pago)</option>
                 </select>
+                
+                <select id="working-days" class="time-select">
+                    <option value="Sun-Thu" selected>Sun-Thu</option>
+                    <option value="Mon-Fri">Mon-Fri</option>
+                    <option value="Mon-Sat">Mon-Sat</option>
+                    <option value="Sun-Sat">Sun-Sat</option>
+                </select>
+                <input type="date" id="gvc-date" class="date-input" style="display: none;">
+            </div>
+            <div class="input-group">
+            
                 <select id="start-time" class="time-select">
                     <option value="08:00">08:00</option>
                     <option value="08:30">08:30</option>
@@ -59,16 +70,11 @@
                     <option value="18:30">18:30</option>
                     <option value="19:00">19:00</option>
                 </select>
-                <select id="working-days" class="time-select">
-                    <option value="Sun-Thu" selected>Sun-Thu</option>
-                    <option value="Mon-Fri">Mon-Fri</option>
-                    <option value="Mon-Sat">Mon-Sat</option>
-                    <option value="Sun-Sat">Sun-Sat</option>
-                </select>
+
                 <input type="date" id="gvc-date" class="date-input" style="display: none;">
             </div>
         </div>
-
+        
         <div class="tabs">
             <button class="tab-button active" data-tab="general">General</button>
             <button class="tab-button" data-tab="gvc">GVC</button>

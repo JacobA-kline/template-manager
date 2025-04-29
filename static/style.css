@@ -52,6 +52,11 @@ h1::after {
     background: #f8fafc;
     border-radius: 15px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+    align-items: center;
+    justify-content: center;
+    display: flex
+;
+    flex-direction: column;
 }
 
 .input-group {
@@ -76,9 +81,8 @@ h1::after {
 }
 
 .date-input {
-    width: 100%;
     max-width: 300px;
-    padding: 1rem 1.5rem;
+    padding: 12px;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
     font-family: 'Poppins', sans-serif;
@@ -135,7 +139,7 @@ h1::after {
 
 .time-select {
     width: 100%;
-    max-width: 100px;
+    max-width: 150px;
     padding: 1rem 1.5rem;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
