@@ -208,12 +208,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Copy to clipboard
     copyButton.addEventListener('click', async () => {
+        const textToCopy = templateContent.value;
+        
+        if (!textToCopy) {
+            alert('No template content to copy!');
+            return;
+        }
+
         try {
-            await navigator.clipboard.writeText(templateContent.value);
-            alert('Template copied to clipboard!');
+            // Try using the modern Clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(textToCopy);
+                alert('Template copied to clipboard!');
+            } else {
+                // Fallback for older browsers or non-secure contexts
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    alert('Template copied to clipboard!');
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                    alert('Failed to copy template. Please try selecting and copying manually.');
+                }
+                
+                textArea.remove();
+            }
         } catch (err) {
             console.error('Failed to copy:', err);
-            alert('Failed to copy template');
+            alert('Failed to copy template. Please try selecting and copying manually.');
         }
     });
 
