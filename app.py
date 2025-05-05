@@ -54,4 +54,4 @@ def save_template():
     return jsonify({'error': 'Invalid data'}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8090) 
+    app.run(debug=True, host='0.0.0.0', port=8090)

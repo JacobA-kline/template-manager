@@ -101,12 +101,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const cityMatch = timezoneText.match(/\((.*?)\)/);
         const cityName = cityMatch ? cityMatch[1] : '[CITY]';
 
+        // Capitalize first letter of agent name
+        const formattedAgentName = agentName ? agentName.charAt(0).toUpperCase() + agentName.slice(1) : '[Your Name]';
+
         console.log('Replacing placeholders with values:');
         console.log('Timezone:', timezoneValue);
         console.log('Start Time:', startTime);
         console.log('End Time:', endTime);
         console.log('Working Days:', workingDays);
-        console.log('Agent Name:', agentName);
+        console.log('Agent Name:', formattedAgentName);
         console.log('City Name:', cityName);
 
         let updatedText = templateText
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/\[WORKING_DAYS\]/g, workingDays)
             .replace(/\[START_TIME\]/g, startTime)
             .replace(/\[END_TIME\]/g, endTime)
-            .replace(/\[Your Name\]/g, agentName || '[Your Name]');
+            .replace(/\[Your Name\]/g, formattedAgentName);
 
         // If the template contains time availability, update it
         if (updatedText.includes('[TIME_AVAILABILITY]')) {
