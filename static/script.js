@@ -99,7 +99,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const workingDays = workingDaysSelect.value;
         const agentName = agentNameInput.value.trim();
         const cityMatch = timezoneText.match(/\((.*?)\)/);
-        const cityName = cityMatch ? cityMatch[1] : '[CITY]';
+        let cityName = cityMatch ? cityMatch[1] : '[CITY]';
+        
+        // Store the original city name for timezone display
+        const originalCityName = cityName;
+        
+        // Replace Jerusalem with Tel-Aviv only for the city name display
+        if (cityName === 'Jerusalem') {
+            cityName = 'Tel-Aviv';
+        }
 
         // Capitalize first letter of agent name
         const formattedAgentName = agentName ? agentName.charAt(0).toUpperCase() + agentName.slice(1) : '[Your Name]';
@@ -111,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Working Days:', workingDays);
         console.log('Agent Name:', formattedAgentName);
         console.log('City Name:', cityName);
+        console.log('Original City Name:', originalCityName);
 
         let updatedText = templateText
             .replace(/\[CITY\]/g, cityName)
@@ -119,6 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/\[START_TIME\]/g, startTime)
             .replace(/\[END_TIME\]/g, endTime)
             .replace(/\[Your Name\]/g, formattedAgentName);
+
+        // Handle the timezone text separately to maintain Jerusalem in the timezone part
+        if (originalCityName === 'Jerusalem') {
+            updatedText = updatedText.replace(/Tel-Aviv Timezone/g, 'Jerusalem Timezone');
+        }
 
         // If the template contains time availability, update it
         if (updatedText.includes('[TIME_AVAILABILITY]')) {
@@ -233,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 try {
                     document.execCommand('copy');
-                    alert('Template copied to clipboard!');
+            alert('Template copied to clipboard!');
                 } catch (err) {
                     console.error('Fallback copy failed:', err);
                     alert('Failed to copy template. Please try selecting and copying manually.');

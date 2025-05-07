@@ -1,0 +1,17 @@
+runtime: python311  
+
+entrypoint: gunicorn -b :8080 app:app  
+
+instance_class: F1  
+
+handlers:
+  - url: /static
+    static_dir: static
+
+  - url: /.*
+    script: auto
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 7
+  target_cpu_utilization: 0.80
