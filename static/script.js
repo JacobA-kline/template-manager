@@ -127,7 +127,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/\[WORKING_DAYS\]/g, workingDays)
             .replace(/\[START_TIME\]/g, startTime)
             .replace(/\[END_TIME\]/g, endTime)
-            .replace(/\[Your Name\]/g, formattedAgentName);
+            .replace(/\[Your Name\]/g, formattedAgentName)
+            .replace(/\[SCHEDULED_DATE\]/g, (() => {
+                const date = new Date(gvcDateInput.value);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+            })());
 
         // Handle the timezone text separately to maintain Jerusalem in the timezone part
         if (originalCityName === 'Jerusalem') {
