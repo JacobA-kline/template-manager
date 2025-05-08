@@ -101,6 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const cityMatch = timezoneText.match(/\((.*?)\)/);
         let cityName = cityMatch ? cityMatch[1] : '[CITY]';
         
+        // Extract just the UTC part from the timezone
+        const utcMatch = timezoneText.match(/UTC[+-]\d+(?::\d+)?/);
+        const utcValue = utcMatch ? utcMatch[0] : '[TIMEZONE]';
+        
         // Store the original city name for timezone display
         const originalCityName = cityName;
         
@@ -114,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log('Replacing placeholders with values:');
         console.log('Timezone:', timezoneValue);
+        console.log('UTC Value:', utcValue);
         console.log('Start Time:', startTime);
         console.log('End Time:', endTime);
         console.log('Working Days:', workingDays);
@@ -123,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let updatedText = templateText
             .replace(/\[CITY\]/g, cityName)
-            .replace(/\[TIMEZONE\]/g, timezoneValue)
+            .replace(/\[TIMEZONE\]/g, utcValue)
             .replace(/\[WORKING_DAYS\]/g, workingDays)
             .replace(/\[START_TIME\]/g, startTime)
             .replace(/\[END_TIME\]/g, endTime)
@@ -131,6 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/\[SCHEDULED_DATE\]/g, (() => {
                 const date = new Date(gvcDateInput.value);
                 return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+            })())
+            .replace(/\[FORMATTED_DATE\]/g, (() => {
+                const date = new Date(gvcDateInput.value);
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
             })());
 
         // Handle the timezone text separately to maintain Jerusalem in the timezone part
