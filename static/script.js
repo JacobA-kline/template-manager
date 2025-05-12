@@ -251,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Try using the modern Clipboard API first
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(textToCopy);
-                alert('Template copied to clipboard!');
             } else {
                 // Fallback for older browsers or non-secure contexts
                 const textArea = document.createElement('textarea');
@@ -265,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 try {
                     document.execCommand('copy');
-            alert('Template copied to clipboard!');
                 } catch (err) {
                     console.error('Fallback copy failed:', err);
                     alert('Failed to copy template. Please try selecting and copying manually.');
