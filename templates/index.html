@@ -9,8 +9,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <span class="jacobs-app">Jacob's App</span>
     <div class="container">
-        <h1>Template Manager</h1>
+        <div class="header-flex">
+            <div class="header-center">
+                <img src="{{ url_for('static', filename='Images/template_manager_header.png') }}" alt="Template Manager Logo" class="header-logo">
+                <div class="header-logo-line"></div>
+            </div>
+        </div>
         
         <div class="agent-info">
             <div class="input-group">
@@ -117,7 +123,7 @@
             <h2>Template Editor</h2>
             <div class="template-tools">
             </div>
-            <textarea id="template-content" rows="10" cols="50"></textarea>
+            <textarea id="template-content" rows="10" cols="50" style="height: 450px;"></textarea>
             <div class="editor-buttons">
                 <button id="copy-template">Copy to Clipboard</button>
             </div>
