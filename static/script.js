@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const agentNameInput = document.getElementById('agent-name');
     const templateButtons = document.querySelectorAll('.template-button');
     const copyButton = document.getElementById('copy-template');
+    const fullSignatureCheckbox = document.getElementById('full-signature-checkbox');
 
     let currentCategory = 'general';
     const today = new Date().toISOString().split('T')[0];
@@ -116,50 +117,62 @@ document.addEventListener('DOMContentLoaded', function() {
         // Capitalize first letter of agent name
         const formattedAgentName = agentName ? agentName.charAt(0).toUpperCase() + agentName.slice(1) : '[Your Name]';
 
-        console.log('Replacing placeholders with values:');
-        console.log('Timezone:', timezoneValue);
-        console.log('UTC Value:', utcValue);
-        console.log('Start Time:', startTime);
-        console.log('End Time:', endTime);
-        console.log('Working Days:', workingDays);
-        console.log('Agent Name:', formattedAgentName);
-        console.log('City Name:', cityName);
-        console.log('Original City Name:', originalCityName);
+        // Check if minimal signature is requested
+        const useFullSignature = fullSignatureCheckbox ? fullSignatureCheckbox.checked : true;
 
-        let updatedText = templateText
-            .replace(/\[CITY\]/g, cityName)
-            .replace(/\[TIMEZONE\]/g, utcValue)
-            .replace(/\[WORKING_DAYS\]/g, workingDays)
-            .replace(/\[START_TIME\]/g, startTime)
-            .replace(/\[END_TIME\]/g, endTime)
-            .replace(/\[Your Name\]/g, formattedAgentName)
-            .replace(/\[SCHEDULED_DATE\]/g, (() => {
-                const date = new Date(gvcDateInput.value);
-                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-            })())
-            .replace(/\[FORMATTED_DATE\]/g, (() => {
-                const date = new Date(gvcDateInput.value);
-                return date.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-            })());
-
-        // Handle the timezone text separately to maintain Jerusalem in the timezone part
-        if (originalCityName === 'Jerusalem') {
-            updatedText = updatedText.replace(/Tel-Aviv Timezone/g, 'Jerusalem Timezone');
+        let updatedText = templateText;
+        if (!useFullSignature) {
+            // Replace only the signature block (from [Your Name] to the end of the signature)
+            updatedText = updatedText.replace(/\[Your Name\][^\n]*\nGoogle Cloud Platform (?:Support|support),? ?\[CITY\][^\n]*\nWorking Hours: ?\[WORKING_DAYS\] ?\[START_TIME\] - \[END_TIME\](?: ?\[CITY\] Timezone ?\(\[TIMEZONE\]\))?/gmi,
+                `${formattedAgentName}\nGoogle Cloud Platform Support\nWorking Hours: ${workingDays} ${startTime} - ${endTime}`
+            );
+            updatedText = updatedText.replace(/\[Your Name\][^\n]*\nGoogle Cloud Platform (?:Support|support)[^\n]*\nWorking Hours: ?\[WORKING_DAYS\] ?\[START_TIME\] - \[END_TIME\][^\n]*/gmi,
+                `${formattedAgentName}\nGoogle Cloud Platform Support\nWorking Hours: ${workingDays} ${startTime} - ${endTime}`
+            );
+            // Fallback: only if [Your Name] is still present and minimal signature is not already present
+            if (updatedText.includes('[Your Name]') && !updatedText.includes('Google Cloud Platform Support\nWorking Hours:')) {
+                updatedText = updatedText.replace(/\[Your Name\]/g, `${formattedAgentName}\nGoogle Cloud Platform Support\nWorking Hours: ${workingDays} ${startTime} - ${endTime}`);
+            }
+            // Always replace [TIME_AVAILABILITY] if present
+            if (updatedText.includes('[TIME_AVAILABILITY]')) {
+                const date = gvcDateInput.value;
+                const utcOffset = timezoneText.match(/UTC[+-]\d+(?::\d+)?/)[0];
+                const timeSlots = generateTimeSlots(date, utcOffset);
+                updatedText = updatedText.replace('[TIME_AVAILABILITY]', timeSlots);
+            }
+        } else {
+            updatedText = updatedText
+                .replace(/\[CITY\]/g, cityName)
+                .replace(/\[TIMEZONE\]/g, utcValue)
+                .replace(/\[WORKING_DAYS\]/g, workingDays)
+                .replace(/\[START_TIME\]/g, startTime)
+                .replace(/\[END_TIME\]/g, endTime)
+                .replace(/\[Your Name\]/g, formattedAgentName)
+                .replace(/\[SCHEDULED_DATE\]/g, (() => {
+                    const date = new Date(gvcDateInput.value);
+                    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                })())
+                .replace(/\[FORMATTED_DATE\]/g, (() => {
+                    const date = new Date(gvcDateInput.value);
+                    return date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                })());
+            // Handle the timezone text separately to maintain Jerusalem in the timezone part
+            if (originalCityName === 'Jerusalem') {
+                updatedText = updatedText.replace(/Tel-Aviv Timezone/g, 'Jerusalem Timezone');
+            }
+            // If the template contains time availability, update it
+            if (updatedText.includes('[TIME_AVAILABILITY]')) {
+                const date = gvcDateInput.value;
+                const utcOffset = timezoneText.match(/UTC[+-]\d+(?::\d+)?/)[0];
+                const timeSlots = generateTimeSlots(date, utcOffset);
+                updatedText = updatedText.replace('[TIME_AVAILABILITY]', timeSlots);
+            }
         }
-
-        // If the template contains time availability, update it
-        if (updatedText.includes('[TIME_AVAILABILITY]')) {
-            const date = gvcDateInput.value;
-            const utcOffset = timezoneText.match(/UTC[+-]\d+(?::\d+)?/)[0];
-            const timeSlots = generateTimeSlots(date, utcOffset);
-            updatedText = updatedText.replace('[TIME_AVAILABILITY]', timeSlots);
-        }
-
         return updatedText;
     }
 
@@ -289,4 +302,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize template content on load
     updateTemplateContent();
+
+    // Add event listener to update template when checkbox changes
+    if (fullSignatureCheckbox) {
+        fullSignatureCheckbox.addEventListener('change', () => {
+            updateSignature();
+            updateTemplateContent();
+        });
+    }
 });

@@ -39,6 +39,10 @@
                     <option value="Mon-Sat">Mon-Sat</option>
                     <option value="Sun-Sat">Sun-Sat</option>
                 </select>
+                <label class="full-signature-label">
+                    <input type="checkbox" id="full-signature-checkbox" checked>
+                    <span>Full Signature</span>
+                </label>
                 <input type="date" id="gvc-date" class="date-input" style="display: none;">
             </div>
             <div class="input-group">
@@ -122,6 +126,7 @@
         <div class="template-editor">
             <h2>Template Editor</h2>
             <div class="template-tools">
+                <!-- Checkbox moved to agent-info -->
             </div>
             <textarea id="template-content" rows="10" cols="50" style="height: 450px;"></textarea>
             <div class="editor-buttons">
